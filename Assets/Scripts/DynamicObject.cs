@@ -16,6 +16,8 @@ public class DynamicObject : MonoBehaviour
     [SerializeField]
     private float _noInputParabolaFriction;
 
+    private bool _inThinPlatformLastFrame;
+
     protected Vector3 _velocity;
     public Vector3 Velocity
     {
@@ -33,6 +35,7 @@ public class DynamicObject : MonoBehaviour
     {
         _collider = GetComponent<BoxCollider2D>();
         _windForces = Vector3.zero;
+        _inThinPlatformLastFrame = false;
     }
 
     protected void Update()
@@ -65,7 +68,7 @@ public class DynamicObject : MonoBehaviour
                     wind = false;
                 }
 
-                if (col.tag != "ThinPlatform")
+                if (col.tag != "ThinPlatform" && col.tag != "WindZone")
                 {
                     thin = false;
                 }
@@ -95,16 +98,32 @@ public class DynamicObject : MonoBehaviour
             }
 
             float prevDeltaY = delta.y;
-            if (!wind && (!thin || delta.y < 0))
+            if (wind) _inThinPlatformLastFrame = false;
+            else
             {
-                float prevVelocityY = this._velocity.y;
-                Land(delta);
-                if (bounce && delta.y < 0 && prevVelocityY < -5)
+                bool stoppedByFloor = false;
+                if (!thin) stoppedByFloor = true;
+                else
                 {
-                    this._velocity.y = -bounceImpulse * prevVelocityY;
-                    delta.y = this._velocity.y * Time.deltaTime;
+                    if (!_inThinPlatformLastFrame && delta.y < 0)
+                    {
+                        stoppedByFloor = true;
+                    }
+                    _inThinPlatformLastFrame = true;
                 }
-                else delta.y = 0;
+
+                if (stoppedByFloor)
+                {
+                    float prevVelocityY = this._velocity.y;
+                    _inThinPlatformLastFrame = false;
+                    Land(delta);
+                    if (bounce && delta.y < 0 && prevVelocityY < -5)
+                    {
+                        this._velocity.y = -bounceImpulse * prevVelocityY;
+                        delta.y = this._velocity.y * Time.deltaTime;
+                    }
+                    else delta.y = 0;
+                }
             }
 
             if (moving || (prevDeltaY < 0 && movingPlatformSpeed.y > 0))
@@ -112,6 +131,7 @@ public class DynamicObject : MonoBehaviour
                 delta += movingPlatformSpeed;
             }
         }
+        else _inThinPlatformLastFrame = false;
 
         _collider.offset = new Vector2(delta.x, 0);
         if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
