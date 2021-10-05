@@ -59,10 +59,19 @@ public class DynamicPlayer : DynamicObject
     //private float _turnAroundTimerMax = 0.2f;
     //private float _turnAroundTimer;
 
+    private SpriteRenderer _spriteRenderer;
+    private Vector2 _baseSpriteSize;
+    private Vector2 _squishedSize;
+
+    private Vector3 _prevVelocity;
+
     private void Start()
     {
         _collider = GetComponent<BoxCollider2D>();
         _baseGravity = this._gravity;
+
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _baseSpriteSize = _spriteRenderer.size;
     }
 
     private new void Update()
@@ -117,6 +126,25 @@ public class DynamicPlayer : DynamicObject
                 this.StopRunning();
             }
         }
+
+        if (Mathf.Abs(this._velocity.y) > 1f)
+        {
+            _spriteRenderer.size = _baseSpriteSize + new Vector2(-Mathf.Abs(_velocity.y) * 0.01f, Mathf.Abs(_velocity.y) * 0.02f);
+        }
+        else if (Mathf.Abs(_prevVelocity.y) > 4f)
+        {
+            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_prevVelocity.y) * 0.05f, -Mathf.Abs(_prevVelocity.y) * 0.02f);
+            _spriteRenderer.size = new Vector2(_spriteRenderer.size.x, Mathf.Abs(_spriteRenderer.size.y));
+            _squishedSize = _spriteRenderer.size;
+        }
+        else
+        {
+            _squishedSize.x = Mathf.Max(_squishedSize.x * 0.99f, _baseSpriteSize.x);
+            _squishedSize.y = Mathf.Min(_squishedSize.y * 1.1f, _baseSpriteSize.y);
+            _spriteRenderer.size = _squishedSize;
+        }
+
+        _prevVelocity = this._velocity;
     }
 
     public void Jump()
