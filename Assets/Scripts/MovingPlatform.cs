@@ -10,6 +10,7 @@ public class MovingPlatform : MonoBehaviour
 
     [SerializeField]
     private Vector3 _speed;
+    private Vector3 _prevDelta;
 
     // Update is called once per frame
     void Update()
@@ -22,10 +23,11 @@ public class MovingPlatform : MonoBehaviour
             _currentDistance = 0f;
             _speed *= -1;
         }
+        _prevDelta = delta;
     }
 
-    public Vector3 GetSpeed()
+    public Vector3 GetDelta()
     {
-        return _speed;
+        return _prevDelta;
     }
 }

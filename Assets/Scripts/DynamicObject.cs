@@ -45,47 +45,19 @@ public class DynamicObject : MonoBehaviour
         }
         this._velocity += deltaV;
         Vector3 delta = this._velocity * Time.deltaTime;
+        Vector3 movingPlatformSpeed = Vector3.zero;
 
         List<Collider2D> colliders = new List<Collider2D>();
-        _collider.offset = new Vector2(delta.x, 0);
-        if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
-        {
-            bool thin = true;
-            bool wind = true;
-            foreach (Collider2D col in colliders)
-            {
-                if (col.tag != "WindZone")
-                {
-                    wind = false;
-                }
-
-                if (col.tag != "ThinPlatform")
-                {
-                    thin = false;
-                    break;
-                }
-            }
-
-            if (!wind && (!thin || delta.y <= 0))
-            {
-                delta.x = 0;
-                _hitWallPrevFrame = true;
-                HitWall(ref delta);
-            }
-        }
-        else if (_hitWallPrevFrame)
-        {
-            _hitWallPrevFrame = false;
-            StopHittingWall();
-        }
 
         _collider.offset = new Vector2(0, delta.y);
         if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
         {
             bool thin = true;
             bool wind = true;
-            float bounceImpulse = 0;
+            bool moving = true;
             bool bounce = false;
+            float bounceImpulse = 0;
+
             foreach (Collider2D col in colliders)
             {
                 if (col.tag != "WindZone")
@@ -110,8 +82,19 @@ public class DynamicObject : MonoBehaviour
                 {
                     delta.x /= stickyPlatform.stickiness;
                 }
+
+                MovingPlatform movingComp = col.GetComponent<MovingPlatform>();
+                if (movingComp != null)
+                {
+                    movingPlatformSpeed += movingComp.GetDelta();
+                }
+                else
+                {
+                    moving = false;
+                }
             }
 
+            float prevDeltaY = delta.y;
             if (!wind && (!thin || delta.y < 0))
             {
                 float prevVelocityY = this._velocity.y;
@@ -123,7 +106,50 @@ public class DynamicObject : MonoBehaviour
                 }
                 else delta.y = 0;
             }
+
+            if (moving || (prevDeltaY < 0 && movingPlatformSpeed.y > 0))
+            {
+                delta += movingPlatformSpeed;
+            }
         }
+
+        _collider.offset = new Vector2(delta.x, 0);
+        if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
+        {
+            bool thin = true;
+            bool wind = true;
+            foreach (Collider2D col in colliders)
+            {
+                if (col.tag != "WindZone")
+                {
+                    wind = false;
+                }
+
+                if (col.tag != "ThinPlatform")
+                {
+                    thin = false;
+                }
+
+                MovingPlatform movingPlatform = col.GetComponent<MovingPlatform>();
+                if (movingPlatform != null)
+                {
+                    movingPlatformSpeed += movingPlatform.GetDelta();
+                }
+            }
+
+            if (!wind && (!thin || delta.y <= 0))
+            {
+                delta.x = 0;
+                _hitWallPrevFrame = true;
+                HitWall(ref delta);
+            }
+        }
+        else if (_hitWallPrevFrame)
+        {
+            _hitWallPrevFrame = false;
+            StopHittingWall();
+        }
+
         _collider.offset = Vector2.zero;
 
         this.transform.position += delta;
