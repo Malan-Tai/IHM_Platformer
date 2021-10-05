@@ -1,0 +1,3 @@
+Bugs:
+Moving platform has some problems (being inside of it is weird, it doesn't move the player along when going downwards)
+Wall grab sometimes doesn't proc when jumping from one wall to the opposite one

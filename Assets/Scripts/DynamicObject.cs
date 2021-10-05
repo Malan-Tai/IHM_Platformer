@@ -157,7 +157,7 @@ public class DynamicObject : MonoBehaviour
                 }
             }
 
-            if (!wind && (!thin || delta.y <= 0))
+            if (!wind && (!thin || delta.y <= 0) && !_inThinPlatformLastFrame)
             {
                 delta.x = 0;
                 _hitWallPrevFrame = true;
