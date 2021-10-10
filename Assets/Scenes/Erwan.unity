@@ -473,6 +473,7 @@ MonoBehaviour:
   _airJumpNumber: 2
   _dashNumber: 2
   _loweredGravity: -26
+  _dashDurationLimit: 0.15
   _wallGrabStrength: 1.05
   _maxCoyoteTime: 0.3
 --- !u!114 &412348330

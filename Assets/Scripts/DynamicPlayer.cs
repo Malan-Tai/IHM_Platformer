@@ -25,6 +25,7 @@ public class DynamicPlayer : DynamicObject
         get { return _isDashing; }
         private set { _isDashing = value; }
     }
+    [SerializeField]
     private float _dashDurationLimit = 0.1f;
     private float _dashDuration = 0;
 
