@@ -16,7 +16,7 @@ public class DynamicObject : MonoBehaviour
     [SerializeField]
     private float _noInputParabolaFriction;
 
-    private bool _inThinPlatformLastFrame;
+    protected bool _inThinPlatformLastFrame;
 
     protected Vector3 _velocity;
     public Vector3 Velocity

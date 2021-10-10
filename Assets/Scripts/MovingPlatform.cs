@@ -12,7 +12,6 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 _speed;
     private Vector3 _prevDelta;
 
-    // Update is called once per frame
     void Update()
     {
         Vector3 delta = _speed * Time.deltaTime;

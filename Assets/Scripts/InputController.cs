@@ -20,7 +20,7 @@ public class InputController : MonoBehaviour
     {
         if (_dynamicPlayer == null) return;
 
-        if (!_dynamicPlayer.IsDashing) // && (!_dynamicPlayer.isTurningAround) )
+        if (!_dynamicPlayer.IsDashing)
         {
             if (_dynamicPlayer.IsRunning)
             {
@@ -28,29 +28,14 @@ public class InputController : MonoBehaviour
             }
             else
             {
-                //if ( (_dynamicPlayer.Velocity.y == 0) && ( ((_dynamicPlayer._speedPreviousPreviousFrame > 0) && (Input.GetAxis("Horizontal") < 0)) || ((_dynamicPlayer._speedPreviousPreviousFrame < 0) && (Input.GetAxis("Horizontal") > 0)) ) )
-                //{
-                //    _dynamicPlayer.SetHorizontalSpeed(-_dynamicPlayer._speedPreviousPreviousFrame);
-                //    _dynamicPlayer.isTurningAround = true;
-                //}
-                //else
-                //{
-                    _dynamicPlayer.SetHorizontalSpeed(_maxSpeed * Input.GetAxis("Horizontal"));
-                //}
+                _dynamicPlayer.SetHorizontalSpeed(_maxSpeed * Input.GetAxis("Horizontal"));
+            }
+
+            if (Input.GetAxis("Vertical") < 0)
+            {
+                _dynamicPlayer.TryGettingDownThinPlatform();
             }
         }
-
-        //if (_dynamicPlayer.isTurningAround)
-        //{
-        //    if ( (_dynamicPlayer.Velocity.x > 0) && ((_maxSpeed * Input.GetAxis("Horizontal") > _dynamicPlayer.Velocity.x)) )
-        //    {
-        //        _dynamicPlayer.SetHorizontalSpeed(_maxSpeed * Input.GetAxis("Horizontal"));
-        //    }
-        //    else if ((_dynamicPlayer.Velocity.x < 0) && ((_maxSpeed * Input.GetAxis("Horizontal") < _dynamicPlayer.Velocity.x)))
-        //    {
-        //        _dynamicPlayer.SetHorizontalSpeed(_maxSpeed * Input.GetAxis("Horizontal"));
-        //    }
-        //}
         
         if (Input.GetKeyDown(KeyCode.Space) && (_dynamicPlayer.CanJump)) _dynamicPlayer.Jump();
         if (Input.GetKeyUp(KeyCode.Space)) _dynamicPlayer.RestoreGravity();

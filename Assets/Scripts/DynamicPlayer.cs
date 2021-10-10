@@ -53,12 +53,6 @@ public class DynamicPlayer : DynamicObject
     private float _maxCoyoteTime;
     private float _coyoteTimer;
 
-    //public float _speedPreviousFrame;
-    //public float _speedPreviousPreviousFrame;
-    //public bool isTurningAround = false;
-    //private float _turnAroundTimerMax = 0.2f;
-    //private float _turnAroundTimer;
-
     private SpriteRenderer _spriteRenderer;
     private Vector2 _baseSpriteSize;
     private Vector2 _squishedSize;
@@ -76,9 +70,6 @@ public class DynamicPlayer : DynamicObject
 
     private new void Update()
     {
-        //_speedPreviousPreviousFrame = _speedPreviousFrame;
-        //_speedPreviousFrame = _velocity.x;
-
         base.Update();
         if (Velocity.y <= 0)
         {
@@ -101,19 +92,6 @@ public class DynamicPlayer : DynamicObject
                 _dashDuration = 0;
             }
         }
-
-        //if (isTurningAround)
-        //{
-        //    if (_turnAroundTimer < _turnAroundTimerMax)
-        //    {
-        //        _turnAroundTimer += Time.deltaTime;
-        //    }
-        //    else
-        //    {
-        //        isTurningAround = false;
-        //        _turnAroundTimer = 0;
-        //    }
-        //}
 
         if (_isRunning)
         {
@@ -242,5 +220,34 @@ public class DynamicPlayer : DynamicObject
 
         _prevHitWallDirection = _hitWallDirection;
         _hitWallDirection = 0f;
+    }
+
+    public void TryGettingDownThinPlatform()
+    {
+        float deltaY = _gravity * Time.deltaTime / 10f;
+
+        List<Collider2D> colliders = new List<Collider2D>();
+
+        _collider.offset = new Vector2(0, deltaY);
+        if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
+        {
+            bool thin = true;
+
+            foreach (Collider2D col in colliders)
+            {
+                if (col.tag != "ThinPlatform")
+                {
+                    thin = false;
+                    break;
+                }
+            }
+
+            if (thin)
+            {
+                this.transform.position += new Vector3(0, deltaY, 0);
+                _inThinPlatformLastFrame = true;
+            }
+        }
+        _collider.offset = Vector2.zero;
     }
 }
