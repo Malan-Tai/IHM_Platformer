@@ -127,7 +127,11 @@ public class DynamicPlayer : DynamicObject
             }
         }
 
-        if (Mathf.Abs(this._velocity.y) > 1f)
+        if (_isDashing)
+        {
+            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_velocity.x) * 0.02f, -Mathf.Abs(_velocity.x) * 0.005f);
+        }
+        else if (Mathf.Abs(this._velocity.y) > 1f)
         {
             _spriteRenderer.size = _baseSpriteSize + new Vector2(-Mathf.Abs(_velocity.y) * 0.01f, Mathf.Abs(_velocity.y) * 0.02f);
         }
