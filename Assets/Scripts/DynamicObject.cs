@@ -138,6 +138,7 @@ public class DynamicObject : MonoBehaviour
         {
             bool thin = true;
             bool wind = true;
+            bool moving = true;
             foreach (Collider2D col in colliders)
             {
                 if (col.tag != "WindZone")
@@ -155,13 +156,21 @@ public class DynamicObject : MonoBehaviour
                 {
                     movingPlatformSpeed += movingPlatform.GetDelta();
                 }
+                else
+                {
+                    moving = false;
+                }
             }
 
-            if (!wind && (!thin || delta.y <= 0) && !_inThinPlatformLastFrame)
+            if (!moving && !wind && (!thin || delta.y <= 0) && !_inThinPlatformLastFrame)
             {
                 delta.x = 0;
                 _hitWallPrevFrame = true;
                 HitWall(ref delta);
+            }
+            else if (moving)
+            {
+                //delta += movingPlatformSpeed;
             }
         }
         else if (_hitWallPrevFrame)
@@ -172,7 +181,13 @@ public class DynamicObject : MonoBehaviour
 
         _collider.offset = Vector2.zero;
 
+        //Vector3 prev = this.transform.position;
         this.transform.position += delta;
+        //if (movingPlatformSpeed != Vector3.zero)
+        //{
+        //    print("delta : " + delta * 1000f);
+        //    //print("object difference : " + (this.transform.position - prev) * 1000f);
+        //}
     }
 
     public void SetHorizontalSpeed(float speed)

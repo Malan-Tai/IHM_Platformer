@@ -12,7 +12,7 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 _speed;
     private Vector3 _prevDelta;
 
-    void Update()
+    void LateUpdate()
     {
         Vector3 delta = _speed * Time.deltaTime;
         this.transform.position += delta;

@@ -71,7 +71,9 @@ public class DynamicPlayer : DynamicObject
 
     private new void Update()
     {
+        //Vector3 prev = this.transform.position;
         base.Update();
+        //print("after object difference : " + (this.transform.position - prev) * 1000f);
         if (Velocity.y <= 0)
         {
             RestoreGravity();
@@ -128,6 +130,8 @@ public class DynamicPlayer : DynamicObject
         }
 
         _prevVelocity = this._velocity;
+
+        //print("after player difference : " + (this.transform.position - prev) * 1000f);
     }
 
     public void Jump()
