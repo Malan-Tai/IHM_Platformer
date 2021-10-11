@@ -1,4 +1,5 @@
 # TODO:
+- Generalize Input for running
 - Ice
 - Feedbacks
 - Fix Bugs
