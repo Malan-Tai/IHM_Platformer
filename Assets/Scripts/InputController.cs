@@ -31,7 +31,7 @@ public class InputController : MonoBehaviour
                 _dynamicPlayer.SetHorizontalSpeed(_maxSpeed * Input.GetAxis("Horizontal"));
             }
 
-            if (Input.GetAxis("Vertical") < 0)
+            if (Input.GetAxis("Vertical") < -0.5f)
             {
                 _dynamicPlayer.TryGettingDownThinPlatform();
             }
