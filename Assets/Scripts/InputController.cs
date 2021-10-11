@@ -37,10 +37,10 @@ public class InputController : MonoBehaviour
             }
         }
         
-        if (Input.GetKeyDown(KeyCode.Space) && (_dynamicPlayer.CanJump)) _dynamicPlayer.Jump();
-        if (Input.GetKeyUp(KeyCode.Space)) _dynamicPlayer.RestoreGravity();
+        if (Input.GetButtonDown("Jump") && (_dynamicPlayer.CanJump)) _dynamicPlayer.Jump();
+        if (Input.GetButtonUp("Jump")) _dynamicPlayer.RestoreGravity();
 
-        if (Input.GetKeyDown(KeyCode.C)) _dynamicPlayer.Dash(Input.GetAxis("Horizontal"));
+        if (Input.GetButtonDown("Dash")) _dynamicPlayer.Dash(Input.GetAxis("Horizontal"));
 
         if (Input.GetKeyDown(KeyCode.R) && (_dynamicPlayer.Velocity.y == 0)) _dynamicPlayer.StartRunning();
         if (Input.GetKeyUp(KeyCode.R)) _dynamicPlayer.StopRunning();
