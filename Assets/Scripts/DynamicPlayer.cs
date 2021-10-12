@@ -108,9 +108,9 @@ public class DynamicPlayer : DynamicObject
             }
         }
 
-        if (_isDashing)
+        if (_isDashing || (_isRunning && Mathf.Abs(this._velocity.y) < 1f))
         {
-            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_velocity.x) * 0.02f, -Mathf.Abs(_velocity.x) * 0.005f);
+            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_velocity.x) * 0.005f, -Mathf.Abs(_velocity.x) * 0.005f);
         }
         else if (Mathf.Abs(this._velocity.y) > 1f)
         {
