@@ -5,6 +5,12 @@ using UnityEngine;
 public class DynamicPlayer : DynamicObject
 {
     [SerializeField]
+    private ParticleSystem _landingParticle;
+
+    [SerializeField]
+    private ShakeBehavior _camera;
+
+    [SerializeField]
     private float _jumpImpulse;
 
     [SerializeField]
@@ -202,6 +208,14 @@ public class DynamicPlayer : DynamicObject
             _prevHitWallDirection = 0f;
             _hitWallDirection = 0f;
             _coyoteTimer = 0;
+            if (delta.y * 10000 < -50)
+            {
+                Instantiate(_landingParticle, this.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity);
+            }
+            if (delta.y * 10000 < -350)
+            {
+                _camera.TriggerShake();
+            }
         }
         base.Land(delta);
     }

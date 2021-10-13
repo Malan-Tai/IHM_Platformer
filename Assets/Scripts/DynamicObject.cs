@@ -16,6 +16,9 @@ public class DynamicObject : MonoBehaviour
     [SerializeField]
     private float _noInputParabolaFriction;
 
+    [SerializeField]
+    private ParticleSystem _stickyParticle;
+
     protected bool _inThinPlatformLastFrame;
 
     protected Vector3 _velocity;
@@ -81,9 +84,11 @@ public class DynamicObject : MonoBehaviour
                 }
 
                 StickyPlatform stickyPlatform = col.GetComponent<StickyPlatform>();
-                if (stickyPlatform != null)
+                if ((stickyPlatform != null) && (delta.x != 0))
                 {
                     delta.x /= stickyPlatform.stickiness;
+                    _stickyParticle.transform.position = this.transform.position;
+                    _stickyParticle.gameObject.SetActive(true);
                 }
 
                 MovingPlatform movingComp = col.GetComponent<MovingPlatform>();
