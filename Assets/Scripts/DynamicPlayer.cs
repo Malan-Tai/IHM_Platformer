@@ -63,6 +63,10 @@ public class DynamicPlayer : DynamicObject
     private SpriteRenderer _spriteRenderer;
     private Vector2 _baseSpriteSize;
     private Vector2 _squishedSize;
+    [SerializeField]
+    private float _maxSquish;
+    [SerializeField]
+    private float _minSquish;
 
     private Vector3 _prevVelocity;
 
@@ -77,9 +81,7 @@ public class DynamicPlayer : DynamicObject
 
     private new void Update()
     {
-        //Vector3 prev = this.transform.position;
         base.Update();
-        //print("after object difference : " + (this.transform.position - prev) * 1000f);
         if (Velocity.y <= 0)
         {
             RestoreGravity();
@@ -114,30 +116,35 @@ public class DynamicPlayer : DynamicObject
             }
         }
 
-        if (_isDashing || (_isRunning && Mathf.Abs(this._velocity.y) < 1f))
+        float prevAbsSpeed = Mathf.Abs(_prevVelocity.y);
+        float curAbsSpeed = Mathf.Abs(this._velocity.y);
+
+        Vector2 newSpriteSize;
+        if (_isDashing || (_isRunning && curAbsSpeed < 1f)) // horizontal speed
         {
-            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_velocity.x) * 0.005f, -Mathf.Abs(_velocity.x) * 0.005f);
+            newSpriteSize = _baseSpriteSize + new Vector2(Mathf.Abs(_velocity.x) * 0.005f, -Mathf.Abs(_velocity.x) * 0.005f);
         }
-        else if (Mathf.Abs(this._velocity.y) > 1f)
+        else if (curAbsSpeed > 2f && prevAbsSpeed > 3f) // vertical speed
         {
-            _spriteRenderer.size = _baseSpriteSize + new Vector2(-Mathf.Abs(_velocity.y) * 0.01f, Mathf.Abs(_velocity.y) * 0.02f);
+            newSpriteSize = _baseSpriteSize + new Vector2(-curAbsSpeed * 0.01f, curAbsSpeed * 0.02f);
         }
-        else if (Mathf.Abs(_prevVelocity.y) > 4f)
+        else if (prevAbsSpeed > 4f) // landing
         {
-            _spriteRenderer.size = _baseSpriteSize + new Vector2(Mathf.Abs(_prevVelocity.y) * 0.05f, -Mathf.Abs(_prevVelocity.y) * 0.02f);
-            _spriteRenderer.size = new Vector2(_spriteRenderer.size.x, Mathf.Abs(_spriteRenderer.size.y));
-            _squishedSize = _spriteRenderer.size;
+            newSpriteSize = _baseSpriteSize + new Vector2(prevAbsSpeed * 0.05f, -prevAbsSpeed * 0.02f);
+            newSpriteSize = new Vector2(newSpriteSize.x, Mathf.Abs(newSpriteSize.y));
         }
         else
         {
-            _squishedSize.x = Mathf.Max(_squishedSize.x * 0.99f, _baseSpriteSize.x);
-            _squishedSize.y = Mathf.Min(_squishedSize.y * 1.1f, _baseSpriteSize.y);
-            _spriteRenderer.size = _squishedSize;
+            newSpriteSize = _squishedSize + (_baseSpriteSize - _squishedSize) * Time.deltaTime * 10f;
         }
 
-        _prevVelocity = this._velocity;
+        newSpriteSize.x = Mathf.Clamp(newSpriteSize.x, _minSquish, _maxSquish);
+        newSpriteSize.y = Mathf.Clamp(newSpriteSize.y, _minSquish, _maxSquish);
 
-        //print("after player difference : " + (this.transform.position - prev) * 1000f);
+        _spriteRenderer.size = newSpriteSize;
+        _squishedSize = newSpriteSize;
+
+        _prevVelocity = this._velocity;
     }
 
     public void Jump()
