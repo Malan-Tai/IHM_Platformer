@@ -68,6 +68,10 @@ public class DynamicPlayer : DynamicObject
     [SerializeField]
     private float _minSquish;
 
+    [SerializeField]
+    private float _persistentImageSpawnTime;
+    private float _currentImageSpawnTime = 0f;
+
     private Vector3 _prevVelocity;
 
     private void Start()
@@ -143,6 +147,15 @@ public class DynamicPlayer : DynamicObject
 
         _spriteRenderer.size = newSpriteSize;
         _squishedSize = newSpriteSize;
+
+        //if (this._velocity.magnitude > 10)
+        _currentImageSpawnTime += Time.deltaTime;
+
+        if (_currentImageSpawnTime >= _persistentImageSpawnTime)
+        {
+            _currentImageSpawnTime = 0f;
+            PersistentImageFactory.Instance.CreateImage(this.transform.position, _squishedSize);
+        }
 
         _prevVelocity = this._velocity;
     }
