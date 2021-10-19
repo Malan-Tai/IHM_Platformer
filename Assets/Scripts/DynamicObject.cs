@@ -122,7 +122,7 @@ public class DynamicObject : MonoBehaviour
                     float prevVelocityY = this._velocity.y;
                     _inThinPlatformLastFrame = false;
                     Land(delta);
-                    if (bounce && delta.y < 0 && prevVelocityY < -5)
+                    if (bounce && delta.y < 0 && prevVelocityY < -15)
                     {
                         this._velocity.y = -bounceImpulse * prevVelocityY;
                         delta.y = this._velocity.y * Time.deltaTime;

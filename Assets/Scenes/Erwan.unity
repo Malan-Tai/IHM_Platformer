@@ -482,6 +482,8 @@ MonoBehaviour:
   _maxSquish: 2
   _minSquish: 0.5
   _persistentImageSpawnTime: 0.1
+  _dashColor: {r: 1, g: 0.4669811, b: 0.49867424, a: 1}
+  _maxColorTimer: 0.07
 --- !u!114 &412348330
 MonoBehaviour:
   m_ObjectHideFlags: 0
