@@ -473,6 +473,7 @@ MonoBehaviour:
   _landingParticle: {fileID: 1270805868887765475, guid: 71d19667791886a40a053f7c796ce09b, type: 3}
   _camera: {fileID: 966331876}
   _jumpImpulse: 20
+  _wallJumpImpulse: 10
   _airJumpNumber: 2
   _dashNumber: 2
   _loweredGravity: -26
@@ -484,6 +485,7 @@ MonoBehaviour:
   _persistentImageSpawnTime: 0.1
   _dashColor: {r: 1, g: 0.4669811, b: 0.49867424, a: 1}
   _maxColorTimer: 0.07
+  _maxWallJumpTimer: 0.3
 --- !u!114 &412348330
 MonoBehaviour:
   m_ObjectHideFlags: 0

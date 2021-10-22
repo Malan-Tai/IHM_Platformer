@@ -20,7 +20,7 @@ public class InputController : MonoBehaviour
     {
         if (_dynamicPlayer == null) return;
 
-        if (!_dynamicPlayer.IsDashing)
+        if (!_dynamicPlayer.IsDashing && !_dynamicPlayer.IsWallJumping)
         {
             if (_dynamicPlayer.IsRunning)
             {
