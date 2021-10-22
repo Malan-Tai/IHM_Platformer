@@ -8,6 +8,11 @@ public class DynamicPlayer : DynamicObject
     private ParticleSystem _landingParticle;
 
     [SerializeField]
+    private ParticleSystem _wallParticleRight;
+    [SerializeField]
+    private ParticleSystem _wallParticleLeft;
+
+    [SerializeField]
     private ShakeBehavior _camera;
 
     [SerializeField]
@@ -254,7 +259,7 @@ public class DynamicPlayer : DynamicObject
             {
                 Instantiate(_landingParticle, this.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity);
             }
-            if (delta.y * 10000 < -500)
+            if (delta.y * 10000 < -400)
             {
                 _camera.TriggerShake();
             }
@@ -269,6 +274,17 @@ public class DynamicPlayer : DynamicObject
             _currentAirJumps = 0;
             _currentDash = 0;
             _hitWallDirection = this._velocity.x;
+
+            if (_hitWallDirection > 0) // je vais à droite
+            {
+                _wallParticleRight.transform.position = this.transform.position;
+                _wallParticleRight.gameObject.SetActive(true);
+            }
+            else
+            {
+                _wallParticleLeft.transform.position = this.transform.position;
+                _wallParticleLeft.gameObject.SetActive(true);
+            }
 
             delta.y /= _wallGrabStrength;
             this._velocity.y /= _wallGrabStrength;
@@ -310,5 +326,20 @@ public class DynamicPlayer : DynamicObject
             }
         }
         _collider.offset = Vector2.zero;
+    }
+
+    public override void Die()
+    {
+        Debug.Log("Y O U   D I E D");
+        this.transform.position = new Vector3(-3, 19, 0);
+        this.Velocity = Vector3.zero;
+        this._currentAirJumps = 0;
+        this._currentDash = 0;
+        this.IsDashing = false;
+        this.IsRunning = false;
+        this._hitWallDirection = 0;
+        this._prevHitWallDirection = 0;
+        
+        base.Die();
     }
 }

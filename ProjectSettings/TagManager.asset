@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ThinPlatform
   - WindZone
+  - Fire
   layers:
   - Default
   - TransparentFX

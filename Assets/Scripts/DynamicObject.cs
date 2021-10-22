@@ -66,6 +66,12 @@ public class DynamicObject : MonoBehaviour
 
             foreach (Collider2D col in colliders)
             {
+                if (col.tag == "Fire")
+                {
+                    this.Die();
+                    return;
+                }
+
                 if (col.tag != "WindZone")
                 {
                     wind = false;
@@ -146,6 +152,12 @@ public class DynamicObject : MonoBehaviour
             bool moving = true;
             foreach (Collider2D col in colliders)
             {
+                if (col.tag == "Fire")
+                {
+                    this.Die();
+                    return;
+                }
+
                 if (col.tag != "WindZone")
                 {
                     wind = false;
@@ -223,5 +235,10 @@ public class DynamicObject : MonoBehaviour
     public void AddWind(Vector3 force)
     {
         _windForces += force;
+    }
+
+    public virtual void Die()
+    {
+
     }
 }
