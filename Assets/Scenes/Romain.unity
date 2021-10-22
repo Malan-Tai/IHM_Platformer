@@ -479,6 +479,8 @@ MonoBehaviour:
   _dashDurationLimit: 0.15
   _wallGrabStrength: 1.05
   _maxCoyoteTime: 0.3
+  _maxSquish: 2
+  _minSquish: 0.5
 --- !u!114 &412348330
 MonoBehaviour:
   m_ObjectHideFlags: 0
