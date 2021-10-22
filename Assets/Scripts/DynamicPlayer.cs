@@ -68,6 +68,17 @@ public class DynamicPlayer : DynamicObject
     [SerializeField]
     private float _minSquish;
 
+    [SerializeField]
+    private float _persistentImageSpawnTime;
+    private float _currentImageSpawnTime = 0f;
+
+    [SerializeField]
+    private Color _dashColor;
+    private Color _baseColor;
+    [SerializeField]
+    private float _maxColorTimer;
+    private float _currentColorTimer = 0f;
+
     private Vector3 _prevVelocity;
 
     private void Start()
@@ -77,6 +88,7 @@ public class DynamicPlayer : DynamicObject
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _baseSpriteSize = _spriteRenderer.size;
+        _baseColor = _spriteRenderer.color;
     }
 
     private new void Update()
@@ -144,7 +156,26 @@ public class DynamicPlayer : DynamicObject
         _spriteRenderer.size = newSpriteSize;
         _squishedSize = newSpriteSize;
 
+        //if (this._velocity.magnitude > 10)
+        _currentImageSpawnTime += Time.deltaTime;
+
+        if (_currentImageSpawnTime >= _persistentImageSpawnTime)
+        {
+            _currentImageSpawnTime = 0f;
+            PersistentImageFactory.Instance.CreateImage(this.transform.position, _squishedSize);
+        }
+
         _prevVelocity = this._velocity;
+
+        if (_spriteRenderer.color != _baseColor)
+        {
+            _currentColorTimer += Time.deltaTime;
+            if (_currentColorTimer >= _maxColorTimer)
+            {
+                _currentColorTimer = 0f;
+                _spriteRenderer.color = _baseColor;
+            }
+        }
     }
 
     public void Jump()
@@ -153,6 +184,7 @@ public class DynamicPlayer : DynamicObject
         if ((this._velocity.y != 0 && _coyoteTimer > _maxCoyoteTime) && _currentAirJumps < _airJumpNumber && _hitWallDirection == 0f)
         {
             _currentAirJumps++;
+            _spriteRenderer.color = _dashColor;
             doJump = true;
         }
         else if (this._velocity.y == 0 || _hitWallDirection != 0f || _coyoteTimer <= _maxCoyoteTime) doJump = true;
@@ -193,6 +225,9 @@ public class DynamicPlayer : DynamicObject
         this._velocity.y = 0;
         SetHorizontalSpeed(40 * directionNormalized);
         _currentDash++;
+
+        _camera.TriggerShake();
+        _spriteRenderer.color = _dashColor;
     }
 
     public void StartRunning()
@@ -219,7 +254,7 @@ public class DynamicPlayer : DynamicObject
             {
                 Instantiate(_landingParticle, this.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity);
             }
-            if (delta.y * 10000 < -350)
+            if (delta.y * 10000 < -500)
             {
                 _camera.TriggerShake();
             }
