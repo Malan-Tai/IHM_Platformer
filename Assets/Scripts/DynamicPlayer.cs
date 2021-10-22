@@ -13,6 +13,9 @@ public class DynamicPlayer : DynamicObject
     private ParticleSystem _wallParticleLeft;
 
     [SerializeField]
+    private ParticleSystem _deathParticle;
+
+    [SerializeField]
     private ShakeBehavior _camera;
 
     [SerializeField]
@@ -345,6 +348,7 @@ public class DynamicPlayer : DynamicObject
     public override void Die()
     {
         Debug.Log("Y O U   D I E D");
+        Instantiate(_deathParticle, this.transform.position, Quaternion.identity);
         this.transform.position = new Vector3(-3, 19, 0);
         this.Velocity = Vector3.zero;
         this._currentAirJumps = 0;
