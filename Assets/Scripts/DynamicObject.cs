@@ -54,10 +54,29 @@ public class DynamicObject : MonoBehaviour
         Vector3 movingPlatformSpeed = Vector3.zero;
 
         List<Collider2D> colliders = new List<Collider2D>();
+        Collider2D[] verticalColliders;
+
+        bool currentlyInThin = false;
+        if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
+        {
+            foreach (Collider2D col in colliders)
+            {
+                if (col.tag == "ThinPlatform")
+                {
+                    currentlyInThin = true;
+                    break;
+                }
+            }
+        }
+
+        float prevDeltaY = delta.y;
 
         _collider.offset = new Vector2(0, delta.y);
         if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
         {
+            verticalColliders = new Collider2D[colliders.Count];
+            colliders.CopyTo(verticalColliders);
+
             bool thin = true;
             bool wind = true;
             bool moving = true;
@@ -108,7 +127,6 @@ public class DynamicObject : MonoBehaviour
                 }
             }
 
-            float prevDeltaY = delta.y;
             if (wind) _inThinPlatformLastFrame = false;
             else
             {
@@ -142,14 +160,17 @@ public class DynamicObject : MonoBehaviour
                 delta += movingPlatformSpeed;
             }
         }
-        else _inThinPlatformLastFrame = false;
+        else
+        {
+            _inThinPlatformLastFrame = false;
+            verticalColliders = new Collider2D[0];
+        }
 
         _collider.offset = new Vector2(delta.x, 0);
         if (_collider.OverlapCollider(new ContactFilter2D(), colliders) > 0)
         {
             bool thin = true;
             bool wind = true;
-            bool moving = true;
             foreach (Collider2D col in colliders)
             {
                 if (col.tag == "Fire")
@@ -167,27 +188,14 @@ public class DynamicObject : MonoBehaviour
                 {
                     thin = false;
                 }
-
-                MovingPlatform movingPlatform = col.GetComponent<MovingPlatform>();
-                if (movingPlatform != null)
-                {
-                    movingPlatformSpeed += movingPlatform.GetDelta();
-                }
-                else
-                {
-                    moving = false;
-                }
             }
 
-            if (!moving && !wind && (!thin || delta.y <= 0) && !_inThinPlatformLastFrame)
+            if (!wind && (!thin || delta.y <= 0) && !_inThinPlatformLastFrame)
             {
                 delta.x = 0;
                 _hitWallPrevFrame = true;
                 HitWall(ref delta);
-            }
-            else if (moving)
-            {
-                //delta += movingPlatformSpeed;
+                if (currentlyInThin || (verticalColliders.Length == 1 && verticalColliders[0] == colliders[0])) delta.y = Mathf.Min(prevDeltaY, 10 * _gravity * Time.deltaTime * Time.deltaTime);
             }
         }
         else if (_hitWallPrevFrame)
@@ -198,13 +206,7 @@ public class DynamicObject : MonoBehaviour
 
         _collider.offset = Vector2.zero;
 
-        //Vector3 prev = this.transform.position;
         this.transform.position += delta;
-        //if (movingPlatformSpeed != Vector3.zero)
-        //{
-        //    print("delta : " + delta * 1000f);
-        //    //print("object difference : " + (this.transform.position - prev) * 1000f);
-        //}
     }
 
     public void SetHorizontalSpeed(float speed)

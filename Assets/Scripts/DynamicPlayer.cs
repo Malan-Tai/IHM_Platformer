@@ -17,6 +17,8 @@ public class DynamicPlayer : DynamicObject
 
     [SerializeField]
     private float _jumpImpulse;
+    [SerializeField]
+    private float _wallJumpImpulse;
 
     [SerializeField]
     private int _airJumpNumber;
@@ -85,6 +87,14 @@ public class DynamicPlayer : DynamicObject
     private float _currentColorTimer = 0f;
 
     private Vector3 _prevVelocity;
+
+    [SerializeField]
+    private float _maxWallJumpTimer;
+    private float _currentWallJumpTimer = 0f;
+    public bool IsWallJumping
+    {
+        get => _currentWallJumpTimer < _maxWallJumpTimer;
+    }
 
     private void Start()
     {
@@ -170,6 +180,8 @@ public class DynamicPlayer : DynamicObject
             PersistentImageFactory.Instance.CreateImage(this.transform.position, _squishedSize);
         }
 
+        if (_currentWallJumpTimer < _maxWallJumpTimer) _currentWallJumpTimer += Time.deltaTime;
+
         _prevVelocity = this._velocity;
 
         if (_spriteRenderer.color != _baseColor)
@@ -198,9 +210,11 @@ public class DynamicPlayer : DynamicObject
         {
             this._gravity = _loweredGravity;
             this._velocity.y = _jumpImpulse;
+            _currentWallJumpTimer = _maxWallJumpTimer;
             if (_hitWallDirection != 0f)
             {
-                this._velocity.x = -_hitWallDirection / Mathf.Abs(_hitWallDirection) * _jumpImpulse;
+                this._velocity.x = -_hitWallDirection / Mathf.Abs(_hitWallDirection) * _wallJumpImpulse;
+                _currentWallJumpTimer = 0f;
             }
         }
     }
