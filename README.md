@@ -1,6 +1,6 @@
 # TODO:
 - Generalize Input for running
-- Feedbacks
+- Feedbacks (especially sounds)
 - Fix Bugs
 
 # Bugs:
@@ -8,3 +8,6 @@
 - Wall grab sometimes doesn't proc when jumping from one wall to the opposite one
 - Dashing against a wall prevents grabbing it
 - Sometimes wall grabbing until you touch a thin platform will stop you, sometimes it won't
+- sometimes you'll randomly pass through the ground
+- up-down moving platforms move the player through the ground when under them
+- too much landing particles
