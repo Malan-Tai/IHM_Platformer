@@ -1,5 +1,7 @@
 # TODO:
 - Generalize Input for running
+- Main menu
+- Remappable controls
 - Feedbacks (especially sounds)
 - Fix Bugs
 
