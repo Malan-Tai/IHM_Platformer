@@ -1148,7 +1148,7 @@ MonoBehaviour:
   _deathParticle: {fileID: 95645956885136761, guid: b182a2fd9f55929469ea9b95e1c4ed93, type: 3}
   _camera: {fileID: 966331876}
   _jumpImpulse: 20
-  _wallJumpImpulse: 0
+  _wallJumpImpulse: 10
   _airJumpNumber: 1
   _dashNumber: 1
   _loweredGravity: -26
@@ -1158,9 +1158,9 @@ MonoBehaviour:
   _maxSquish: 2
   _minSquish: 0.5
   _persistentImageSpawnTime: 0.1
-  _dashColor: {r: 0, g: 0, b: 0, a: 0}
+  _dashColor: {r: 1, g: 0.43867922, b: 0.43867922, a: 1}
   _maxColorTimer: 0.07
-  _maxWallJumpTimer: 0
+  _maxWallJumpTimer: 0.3
 --- !u!114 &412348330
 MonoBehaviour:
   m_ObjectHideFlags: 0
