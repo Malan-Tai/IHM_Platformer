@@ -3,6 +3,7 @@
 - Main menu
 - Remappable controls
 - Feedbacks (especially sounds)
+- New levels, bigger with multiple cameras
 - Fix Bugs
 
 # Bugs:
