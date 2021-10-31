@@ -99,6 +99,13 @@ public class DynamicPlayer : DynamicObject
         get => _currentWallJumpTimer < _maxWallJumpTimer;
     }
 
+    [SerializeField]
+    private AudioSource _jumpSound;
+    [SerializeField]
+    private AudioSource _deathSound;
+    [SerializeField]
+    private AudioSource _dashSound;
+
     private void Start()
     {
         _collider = GetComponent<BoxCollider2D>();
@@ -211,6 +218,7 @@ public class DynamicPlayer : DynamicObject
 
         if (doJump)
         {
+            _jumpSound.Play();
             this._gravity = _loweredGravity;
             this._velocity.y = _jumpImpulse;
             _currentWallJumpTimer = _maxWallJumpTimer;
@@ -240,6 +248,7 @@ public class DynamicPlayer : DynamicObject
             }
         }
 
+        _dashSound.Play();
         float directionNormalized = Mathf.Sign(direction);
         _isDashing = true;
         _canJump = false;
@@ -347,7 +356,6 @@ public class DynamicPlayer : DynamicObject
 
     public override void Die()
     {
-        Debug.Log("Y O U   D I E D");
         Instantiate(_deathParticle, this.transform.position, Quaternion.identity);
         this.transform.position = new Vector3(-3, 19, 0);
         this.Velocity = Vector3.zero;
@@ -357,6 +365,7 @@ public class DynamicPlayer : DynamicObject
         this.IsRunning = false;
         this._hitWallDirection = 0;
         this._prevHitWallDirection = 0;
+        _deathSound.Play();
         
         base.Die();
     }
