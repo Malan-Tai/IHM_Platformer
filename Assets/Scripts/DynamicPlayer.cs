@@ -281,11 +281,13 @@ public class DynamicPlayer : DynamicObject
             _prevHitWallDirection = 0f;
             _hitWallDirection = 0f;
             _coyoteTimer = 0;
-            if (delta.y * 10000 < -50)
+
+            float y = Mathf.Abs(delta.y);
+            if (y * 100 > 5)
             {
                 Instantiate(_landingParticle, this.transform.position + new Vector3(0, -0.5f, 0), Quaternion.identity);
             }
-            if (delta.y * 10000 < -400)
+            if (y * 10 > 3)
             {
                 _camera.TriggerShake();
             }
@@ -319,10 +321,12 @@ public class DynamicPlayer : DynamicObject
 
     public override void StopHittingWall()
     {
+        print("stop");
         if (_hitWallDirection == 0f) return;
 
         _prevHitWallDirection = _hitWallDirection;
         _hitWallDirection = 0f;
+        print("do stop");
     }
 
     public void TryGettingDownThinPlatform()

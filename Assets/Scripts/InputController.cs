@@ -42,7 +42,7 @@ public class InputController : MonoBehaviour
 
         if (Input.GetButtonDown("Dash")) _dynamicPlayer.Dash(Input.GetAxis("Horizontal"));
 
-        if (Input.GetKeyDown(KeyCode.R) && (_dynamicPlayer.Velocity.y == 0)) _dynamicPlayer.StartRunning();
-        if (Input.GetKeyUp(KeyCode.R)) _dynamicPlayer.StopRunning();
+        if (Input.GetButtonDown("Run") && (_dynamicPlayer.Velocity.y == 0)) _dynamicPlayer.StartRunning();
+        if (Input.GetButtonUp("Run")) _dynamicPlayer.StopRunning();
     }
 }
