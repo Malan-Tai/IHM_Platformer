@@ -47,19 +47,19 @@ public class InputController : MonoBehaviour
 
         if (Input.GetButtonDown("Run") && (_dynamicPlayer.Velocity.y == 0)) _dynamicPlayer.StartRunning();
         if (Input.GetButtonUp("Run")) _dynamicPlayer.StopRunning();
-        if (Input.GetButtonDown("Pause")) Pause();
-        if (Input.GetButtonDown("Unpause")) Unpause();
+        //if (Input.GetButtonDown("Pause")) Pause();
+        //if (Input.GetButtonDown("Unpause")) Unpause();
     }
 
-    public void Pause()
-    {
-        Time.timeScale = 0;
-        _menu.gameObject.SetActive(true);
-    }
+    //public void Pause()
+    //{
+    //    Time.timeScale = 0;
+    //    _menu.gameObject.SetActive(true);
+    //}
 
-    public void Unpause()
-    {
-        Time.timeScale = 1;
-        _menu.gameObject.SetActive(false);
-    }
+    //public void Unpause()
+    //{
+    //    Time.timeScale = 1;
+    //    _menu.gameObject.SetActive(false);
+    //}
 }
