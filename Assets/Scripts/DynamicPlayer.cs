@@ -321,12 +321,10 @@ public class DynamicPlayer : DynamicObject
 
     public override void StopHittingWall()
     {
-        print("stop");
         if (_hitWallDirection == 0f) return;
 
         _prevHitWallDirection = _hitWallDirection;
         _hitWallDirection = 0f;
-        print("do stop");
     }
 
     public void TryGettingDownThinPlatform()
