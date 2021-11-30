@@ -230,6 +230,9 @@ public class DynamicPlayer : DynamicObject
         }
     }
 
+    public bool HasAirJumpsLeft() { return _currentAirJumps < _airJumpNumber; }
+    public bool HasDashesLeft() { return _currentDash < _dashNumber; }
+
     public void RestoreGravity()
     {
         _gravity = _baseGravity;

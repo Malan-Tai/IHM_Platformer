@@ -1,55 +1,62 @@
 // The flag signals to the rest of the program an interrupt occured
-static bool button_flag = false;
+static volatile bool button_flag_jump = false;
+static volatile bool button_flag_dash = false;
+int buttonPinJump;
+int buttonPinDash;
+int ledPinJump;
+int ledPinDash;
+int potPin;
+
 // Remember the state the river in the Unity program is in
-static bool river_state = false;
 
 // Interrupt handler, sets the flag for later processing
-void ICACHE_RAM_ATTR buttonPress() {
-  button_flag = true;
+void ICACHE_RAM_ATTR buttonPressJump() {
+  button_flag_jump = true;
 }
 
-void ICACHE_RAM_ATTR switchChange() {
-  Serial.println("DAY " + String(digitalRead(D6)));
+void ICACHE_RAM_ATTR buttonPressDash() {
+  button_flag_dash = true;
 }
 
 void setup() {
-  int buttonPin = D4;
+  buttonPinJump = D12;
+  buttonPinDash = D13;
+  ledPinJump = D8;
+  ledPinDash = D9;
+  potPin = A0;
   
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(ledPinJump, OUTPUT);
+  pinMode(ledPinDash, OUTPUT);
   // Internal pullup, no external resistor necessary
-  pinMode(buttonPin,INPUT_PULLUP);
+  pinMode(buttonPinJump,INPUT_PULLUP);
+  pinMode(buttonPinDash,INPUT_PULLUP);
   // 115200 is a common baudrate : fast without being overwhelming
   Serial.begin(115200);
 
   // As the button is in pullup, detect a connection to ground
-  attachInterrupt(digitalPinToInterrupt(buttonPin),buttonPress,FALLING);
+  attachInterrupt(digitalPinToInterrupt(buttonPinJump),buttonPressJump,FALLING);
+  attachInterrupt(digitalPinToInterrupt(buttonPinDash),buttonPressDash,FALLING);
 
-  pinMode(A0, INPUT);
-
-  pinMode(D6, INPUT);
-  attachInterrupt(digitalPinToInterrupt(D6), switchChange, CHANGE);
+  pinMode(potPin, INPUT);
 }
 
 // Processes button input
 void loop() {
   // Slows reaction down a bit
   // but prevents _most_ button press misdetections
-  delay(200);
+  delay(5);
   
-  if (button_flag) {
-    if (river_state) {
-      Serial.println("dry");
-    } else {
-      Serial.println("wet");
-    }
-    river_state = !river_state;
-    button_flag = false;
+  if (button_flag_jump) {
+    Serial.println("JUMP");
+    button_flag_jump = false;
+  }
+  if (button_flag_dash) {
+    Serial.println("DASH");
+    button_flag_dash = false;
   }
 
-  int potentiometre = analogRead(A0);
-  Serial.println(potentiometre);
-
-  
+  int potentiometre = analogRead(potPin);
+  //Serial.println(potentiometre);
 }
 
 // Handles incoming messages
@@ -57,9 +64,18 @@ void loop() {
 void serialEvent()
 {
   String message = Serial.readStringUntil('\r');
-  if (message == "LED ON") {
-    digitalWrite(LED_BUILTIN, LOW);
-  } else if (message == "LED OFF") {
-    digitalWrite(LED_BUILTIN, HIGH);
+  Serial.println(message);
+  if (message == "3") {
+    digitalWrite(ledPinDash, HIGH);
+    digitalWrite(ledPinJump, HIGH);
+  } else if (message == "2") {
+    digitalWrite(ledPinDash, HIGH);
+    digitalWrite(ledPinJump, LOW);
+  } else if (message == "1") {
+    digitalWrite(ledPinJump, HIGH);
+    digitalWrite(ledPinDash, LOW);
+  } else if (message == "0") {
+    digitalWrite(ledPinJump, LOW);
+    digitalWrite(ledPinDash, LOW);
   }
 }
